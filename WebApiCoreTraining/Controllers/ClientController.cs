@@ -20,13 +20,20 @@ namespace WebApiCoreTraining.Controllers
         private readonly static List<Client> clients = new List<Client>();
 
         private readonly static List<Property> properties = new List<Property>();
+
+  
         [HttpPost]
         [Route("AddClient")]
         public ActionResult AddClient([FromBody]Client client)
         {
-            
-            clients.Add(client);
+            int lastId = 1;
+                                           
+            var generateTime = DateTime.Now;
 
+            client.ClientId = lastId;
+            
+            client.DateTimeRegister = generateTime;
+            clients.Add(client);          
             return Ok();
         }
         [HttpGet]
@@ -49,11 +56,52 @@ namespace WebApiCoreTraining.Controllers
             return Ok(result);
             
         }
-           
 
-     
+        [HttpPost]
+        [Route("AddProperty")]
+        public ActionResult AddProperty([FromBody]Property property)
+        {
 
-    
+            properties.Add(property);
+
+            return Ok();
+        }
+        [HttpGet]
+        [Route("GetProperty")]
+        public ActionResult GetProperty(int id)
+        {
+            var result = properties.FirstOrDefault(u => u.Id == id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("GetAllProperty")]
+        public ActionResult GetAllProperty()
+        {
+            var result = properties.ToList();
+            return Ok(result);
+
+        }
+        [HttpGet]
+        [Route("GetPropertyByClientId")]
+        public ActionResult GetPropertyByClientId(int id)
+        {
+            var result = properties.Where(p => p.ClientId == id);
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+
+
+
+
 
 
 

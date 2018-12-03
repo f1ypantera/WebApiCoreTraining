@@ -12,7 +12,7 @@ namespace WebApiCoreTraining.Models
         [Key]
         public int PropertyID { get; set; }
         [ForeignKey("Client")]
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public Client Client { get; set; }
         public string NameProperty { get; set; }
         public string AdressProperty { get; set; }

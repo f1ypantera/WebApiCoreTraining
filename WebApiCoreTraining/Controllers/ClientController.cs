@@ -24,7 +24,9 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddClient")]
         public ActionResult AddClient([FromBody]Client client)
         {
+            
             clients.Add(client);
+
             return Ok();
         }
         [HttpGet]
@@ -32,35 +34,24 @@ namespace WebApiCoreTraining.Controllers
         public ActionResult GetClient(int id)
         {
             var result = clients.FirstOrDefault(u=>u.ClientId == id);
+
+            if(result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
+        [HttpGet]
+        [Route("GetAllClient")]
+        public ActionResult GetAllClient()
+        {
+            var result = clients.ToList();
+            return Ok(result);
+            
+        }
+           
 
-        //[HttpGet]
-        //public IEnumerable<Property> GetProperty()
-        //{
-
-        //    return _webApiContext.Properties.ToList();
-
-        //}
-
-        //[HttpGet]
-        //public ActionResult<List<Client>> GetAll()
-        //{
-        //    return _webApiContext.Clients.ToList();
-        //}
-
-        //[HttpGet("{ClientId}")]
-        //public ActionResult<Client> GetById(int ClientId)
-        //{
-        //    var item = _webApiContext.Clients.Find(ClientId);
-        //    if (item == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return item;
-        //}
-
-
+     
 
     
 

@@ -21,18 +21,15 @@ namespace WebApiCoreTraining.Controllers
 
         private readonly static List<Property> properties = new List<Property>();
 
-  
+        private static int lastId = 1;
+        private static int lastIdProperty = 1;
         [HttpPost]
         [Route("AddClient")]
         public ActionResult AddClient([FromBody]Client client)
-        {
-            int lastId = 1;
-                                           
-            var generateTime = DateTime.Now;
-
+        {                                                     
             client.ClientId = lastId;
-            
-            client.DateTimeRegister = generateTime;
+            lastId++;
+            client.DateTimeRegister = DateTime.Now;
             clients.Add(client);          
             return Ok();
         }
@@ -61,7 +58,8 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddProperty")]
         public ActionResult AddProperty([FromBody]Property property)
         {
-
+            property.Id = lastIdProperty;
+            lastIdProperty++;
             properties.Add(property);
 
             return Ok();
@@ -90,7 +88,13 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetPropertyByClientId")]
         public ActionResult GetPropertyByClientId(int id)
         {
-            var result = properties.Where(p => p.ClientId == id);
+            var result = properties.Where(p => p.ClientId == id).Select(u => new
+            {
+                u.Name,
+                u.Adress,
+                ClientName = clients.FirstOrDefault(c => c.ClientId == u.ClientId).Name,
+            
+            });
             if(result == null)
             {
                 return NotFound();

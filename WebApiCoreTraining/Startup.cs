@@ -25,7 +25,8 @@ namespace WebApiCoreTraining
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+            string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;MultipleActiveResultSets=true";
+            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(con));
             services.AddMvc();
 
         }

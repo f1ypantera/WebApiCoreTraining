@@ -8,8 +8,8 @@ namespace WebApiCoreTraining.Models
 {
     public class PeopleContext :DbContext
     {
-        public DbSet<Client> clients { get; set; }
-        public DbSet<Property> properties { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Property> Properties { get; set; }
 
         public PeopleContext(DbContextOptions<PeopleContext> options):base(options) { }
     }

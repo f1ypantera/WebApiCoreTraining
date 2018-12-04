@@ -16,28 +16,33 @@ namespace WebApiCoreTraining.Controllers
 
     public class ClientController : ControllerBase
     {
+ 
+        private readonly PeopleContext db;
+       
 
-        private readonly static List<Client> clients = new List<Client>();
+        public ClientController(PeopleContext peopleContext)
+        {
+            db = peopleContext;
+        }
 
-        private readonly static List<Property> properties = new List<Property>();
-
-        private static int lastId = 1;
-        private static int lastIdProperty = 1;
         [HttpPost]
         [Route("AddClient")]
         public ActionResult AddClient([FromBody]Client client)
-        {                                                     
-            client.ClientId = lastId;
-            lastId++;
-            client.DateTimeRegister = DateTime.Now;
-            clients.Add(client);          
+        {
+
+
+                db.Add(client);
+                db.SaveChanges();
+                
+        
+                 
             return Ok();
         }
         [HttpGet]
         [Route("GetClient")]
         public ActionResult GetClient(int id)
         {
-            var result = clients.FirstOrDefault(u=>u.ClientId == id);
+            var result = db.Clients.FirstOrDefault(u=>u.ClientId == id);
 
             if(result == null)
             {
@@ -49,7 +54,7 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetAllClient")]
         public ActionResult GetAllClient()
         {
-            var result = clients.ToList();
+            var result = db.Clients.ToList();
             return Ok(result);
             
         }
@@ -58,9 +63,9 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddProperty")]
         public ActionResult AddProperty([FromBody]Property property)
         {
-            property.Id = lastIdProperty;
-            lastIdProperty++;
-            properties.Add(property);
+
+            db.Add(property);
+            db.SaveChanges();
 
             return Ok();
         }
@@ -68,7 +73,7 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetProperty")]
         public ActionResult GetProperty(int id)
         {
-            var result = properties.FirstOrDefault(u => u.Id == id);
+            var result = db.Properties.FirstOrDefault(u => u.Id == id);
 
             if (result == null)
             {
@@ -80,7 +85,7 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetAllProperty")]
         public ActionResult GetAllProperty()
         {
-            var result = properties.ToList();
+            var result = db.Properties.ToList();
             return Ok(result);
 
         }
@@ -88,14 +93,14 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetPropertyByClientId")]
         public ActionResult GetPropertyByClientId(int id)
         {
-            var result = properties.Where(p => p.ClientId == id).Select(u => new
+            var result = db.Properties.Where(p => p.ClientId == id).Select(u => new
             {
                 u.Name,
                 u.Adress,
-                ClientName = clients.FirstOrDefault(c => c.ClientId == u.ClientId).Name,
-            
+                ClientName = db.Clients.FirstOrDefault(c => c.ClientId == u.ClientId).Name,
+
             });
-            if(result == null)
+            if (result == null)
             {
                 return NotFound();
             }

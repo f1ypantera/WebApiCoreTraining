@@ -31,12 +31,12 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddClient")]
         public async Task<ActionResult> AddClient([FromBody] Client client)
         {
-
+            client.DateTimeRegister = DateTime.Now;
             await _clientRepository.AddAsync(client); 
             
             
             
-            return Ok();
+            return Ok("Has been Added");
         }
         [HttpGet]
         [Route("GetClient")]
@@ -63,7 +63,7 @@ namespace WebApiCoreTraining.Controllers
         public async Task<ActionResult> RemoveClient(int id)
         {
             await _clientRepository.RemoveAsync(id);
-            return Ok();
+            return Ok("Has been Deleted");
         }
         //[HttpGet]
         //[Route("GetPropertyByClientId")]
@@ -89,8 +89,9 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddProperty")]
         public async Task<ActionResult> AddProperty([FromBody] Property property)
         {
-           await  _propertyRepository.AddAsync(property);
-            return Ok();
+            
+            await  _propertyRepository.AddAsync(property);
+            return Ok("Has been added");
         }
         [HttpGet]
         [Route("GetProperty")]
@@ -116,7 +117,7 @@ namespace WebApiCoreTraining.Controllers
         public async Task<ActionResult> RemoveProperty(int id)
         {
            await  _propertyRepository.RemoveAsync(id);
-            return Ok();
+            return Ok("Has been deleted");
         }
 
 

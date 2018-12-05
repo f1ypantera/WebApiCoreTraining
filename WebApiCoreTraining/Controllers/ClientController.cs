@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -15,35 +14,36 @@ namespace WebApiCoreTraining.Controllers
     
 
     public class ClientController : ControllerBase
-    {
- 
-        private readonly PeopleContext db;
-       
 
-        public ClientController(PeopleContext peopleContext)
+    {
+        private readonly IRepository<Client> _clientRepository;
+        private readonly IRepository<Property> _propertyRepository;
+
+
+        public ClientController(IRepository<Client> clientRepository, IRepository<Property>  propertyRepository)
         {
-            db = peopleContext;
+            _clientRepository = clientRepository;
+            _propertyRepository = propertyRepository;
+
         }
 
         [HttpPost]
         [Route("AddClient")]
-        public ActionResult AddClient([FromBody]Client client)
+        public async Task<ActionResult> AddClient([FromBody] Client client)
         {
 
-
-                db.Add(client);
-                db.SaveChanges();
-                
-        
-                 
+            await _clientRepository.AddAsync(client); 
+            
+            
+            
             return Ok();
         }
         [HttpGet]
         [Route("GetClient")]
-        public ActionResult GetClient(int id)
+        public async Task<ActionResult> GetClient(int id)
         {
-            var result = db.Clients.FirstOrDefault(u=>u.ClientId == id);
-
+            var result =  await _clientRepository.GetAsync(id);
+           
             if(result == null)
             {
                 return NotFound();
@@ -52,29 +52,51 @@ namespace WebApiCoreTraining.Controllers
         }
         [HttpGet]
         [Route("GetAllClient")]
-        public ActionResult GetAllClient()
+        public  ActionResult GetAllClient()
         {
-            var result = db.Clients.ToList();
+            var result =_clientRepository.GetAll();
             return Ok(result);
             
         }
+        [HttpGet]
+        [Route("RemoveClient")]
+        public async Task<ActionResult> RemoveClient(int id)
+        {
+            await _clientRepository.RemoveAsync(id);
+            return Ok();
+        }
+        //[HttpGet]
+        //[Route("GetPropertyByClientId")]
+        //public ActionResult GetPropertyByClientId(int id)
+        //{
+        //    var result = db.Properties.Where(p => p.ClientId == id).Select(u => new
+        //    {
+        //        u.Name,
+        //        u.Adress,
+        //        ClientName = db.Clients.FirstOrDefault(c => c.ClientId == u.ClientId).Name,
+
+        //    });
+        //    if (result == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(result);
+        //}
+
+
 
         [HttpPost]
         [Route("AddProperty")]
-        public ActionResult AddProperty([FromBody]Property property)
+        public async Task<ActionResult> AddProperty([FromBody] Property property)
         {
-
-            db.Add(property);
-            db.SaveChanges();
-
+           await  _propertyRepository.AddAsync(property);
             return Ok();
         }
         [HttpGet]
         [Route("GetProperty")]
-        public ActionResult GetProperty(int id)
+        public async Task<ActionResult> GetProperty(int id)
         {
-            var result = db.Properties.FirstOrDefault(u => u.Id == id);
-
+            var result = await _propertyRepository.GetAsync(id);
             if (result == null)
             {
                 return NotFound();
@@ -85,29 +107,17 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetAllProperty")]
         public ActionResult GetAllProperty()
         {
-            var result = db.Properties.ToList();
+            var result = _propertyRepository.GetAll();
             return Ok(result);
 
         }
         [HttpGet]
-        [Route("GetPropertyByClientId")]
-        public ActionResult GetPropertyByClientId(int id)
+        [Route("RemoveProperty")]
+        public async Task<ActionResult> RemoveProperty(int id)
         {
-            var result = db.Properties.Where(p => p.ClientId == id).Select(u => new
-            {
-                u.Name,
-                u.Adress,
-                ClientName = db.Clients.FirstOrDefault(c => c.ClientId == u.ClientId).Name,
-
-            });
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
+           await  _propertyRepository.RemoveAsync(id);
+            return Ok();
         }
-
-
 
 
 

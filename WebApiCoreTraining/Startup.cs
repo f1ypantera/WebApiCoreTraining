@@ -33,7 +33,10 @@ namespace WebApiCoreTraining
             string con = "Data Source=KBP1-LHP-F76802\\SQLEXPRESS;Initial Catalog=usersdbstore;Trusted_Connection=True;MultipleActiveResultSets=true";
             services.AddDbContext<PeopleContext>(options => options.UseSqlServer(con));
 
-         
+            services.AddScoped<IRepository<Client>,Repository<Client>>();
+            services.AddScoped<IRepository<Property>, Repository<Property>>();
+
+
 
             services.AddRouting();
             services.AddMvc();

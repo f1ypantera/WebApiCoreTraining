@@ -13,6 +13,8 @@ namespace WebApiCoreTraining.Models
         IQueryable<T> GetAll();
         Task AddAsync(T entity);
         Task RemoveAsync(int id);
+
+       
         
     }
 }

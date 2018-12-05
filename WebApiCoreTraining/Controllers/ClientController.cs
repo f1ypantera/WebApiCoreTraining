@@ -18,6 +18,7 @@ namespace WebApiCoreTraining.Controllers
     {
         private readonly IRepository<Client> _clientRepository;
         private readonly IRepository<Property> _propertyRepository;
+        
 
 
         public ClientController(IRepository<Client> clientRepository, IRepository<Property>  propertyRepository)

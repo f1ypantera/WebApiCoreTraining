@@ -9,13 +9,11 @@ using WebApiCoreTraining.Models;
 namespace WebApiCoreTraining.Models
 {
     public class Client
-    {
-      
+    {   
         [Key]
         public int ClientId { get; set; }
         public string Name { get; set; }
         public DateTime DateTimeRegister { get; set; }
-
         public List<Property> Properties { get; set; }
 
        

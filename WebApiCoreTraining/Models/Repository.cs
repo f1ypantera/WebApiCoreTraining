@@ -17,19 +17,16 @@ namespace WebApiCoreTraining.Models
         {
             dbSet = peopleContext.Set<T>();
             this.peopleContext = peopleContext;
-        }
-        
+        }       
         public async Task<T> GetAsync(int id)
         {
             var  result =  await dbSet.FindAsync(id);
-            return result;
-           
+            return result;           
         }
         public IQueryable<T> GetAll()
         {
             return dbSet;
         }
-
         public async Task AddAsync(T entity)
         {
             
@@ -43,13 +40,7 @@ namespace WebApiCoreTraining.Models
             {
                  dbSet.Remove(result);
                  await peopleContext.SaveChangesAsync();
-            }
-           
+            }          
         }
-
-      
-
-
-
     }
 }

@@ -13,6 +13,7 @@ namespace WebApiCoreTraining.Models
         public int Id { get; set; }
        
         public int ClientId { get; set; }
+        public Client Client { get; set; }
        
         public string Name { get; set; }
         public string Adress { get; set; }

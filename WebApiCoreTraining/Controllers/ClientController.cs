@@ -70,6 +70,8 @@ namespace WebApiCoreTraining.Controllers
         //[Route("GetPropertyByClientId")]
         //public ActionResult GetPropertyByClientId(int id)
         //{
+
+
         //    var result = db.Properties.Where(p => p.ClientId == id).Select(u => new
         //    {
         //        u.Name,

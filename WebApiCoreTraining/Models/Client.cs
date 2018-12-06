@@ -16,6 +16,8 @@ namespace WebApiCoreTraining.Models
         public string Name { get; set; }
         public DateTime DateTimeRegister { get; set; }
 
+        public List<Property> Properties { get; set; }
+
        
     }
 }

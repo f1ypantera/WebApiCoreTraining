@@ -38,7 +38,7 @@ namespace WebApiCoreTraining.Models
         }
         public async Task RemoveAsync(int id)
         {
-            var  result = await dbSet.FirstOrDefaultAsync();
+            var result = await dbSet.FindAsync(id);
             if (result != null)
             {
                  dbSet.Remove(result);

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCoreTraining.Models;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace WebApiCoreTraining.Controllers
@@ -15,18 +17,24 @@ namespace WebApiCoreTraining.Controllers
     {
         private readonly IRepository<Client> clientRepository;
         private readonly IRepository<Property> propertyRepository;
+        private readonly IMapper mapper;
+        private readonly PeopleContext peopleContext;
 
-        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository)
+
+        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository,IMapper mapper, PeopleContext peopleContext)
         {
             this.clientRepository = clientRepository;
             this.propertyRepository = propertyRepository;
+            this.mapper = mapper;
+            this.peopleContext = peopleContext;                          
         }
 
         [HttpPost]
         [Route("AddClient")]
-        public async Task<ActionResult> AddClient([FromBody] Client client)
+        public async Task<ActionResult> AddClient([FromBody] ClientDTO clientDTO)
         {
-            client.DateTimeRegister = DateTime.Now;
+            clientDTO.DateTimeRegister = DateTime.Now;
+            var client = mapper.Map<Client>(clientDTO);
             await clientRepository.AddAsync(client);
             return Ok("Has been Added");
         }
@@ -34,7 +42,8 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetClient")]
         public async Task<ActionResult> GetClient(int id)
         {
-            var result = await clientRepository.GetAsync(id);
+            var client = await clientRepository.GetAsync(id);          
+            var result  = mapper.Map<ClientDTO>(client);
             if (result == null)
             {
                 return NotFound();
@@ -44,40 +53,24 @@ namespace WebApiCoreTraining.Controllers
         [HttpGet]
         [Route("GetAllClient")]
         public ActionResult GetAllClient()
-        {
-            var result = clientRepository.GetAll();           
+        {        
+            var result = mapper.Map<IList<ClientDTO>>(clientRepository.GetAll());        
             return Ok(result);
         }
         [HttpGet]
         [Route("RemoveClient")]
         public async Task<ActionResult> RemoveClient(int id)
-        {
+        {                   
             await clientRepository.RemoveAsync(id);
             return Ok("Has been Deleted");
         }
-        [HttpGet]
-        [Route("GetPropertyByClientId")]
-        public ActionResult GetPropertyByClientId(int id)
-        {
-            var result = propertyRepository.GetAll().Where(p => p.ClientId == id).Select(u => new
-            {
-                ClientName = clientRepository.GetAll().FirstOrDefault(c => c.ClientId == u.ClientId).Name,
-                u.Name,
-                u.Adress,
-            });
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
-        }
-
-
+    
 
         [HttpPost]
         [Route("AddProperty")]
-        public async Task<ActionResult> AddProperty([FromBody] Property property)
+        public async Task<ActionResult> AddProperty([FromBody] PropertyDTO propertyDTO )
         {
+            var property = mapper.Map<Property>(propertyDTO);
             await propertyRepository.AddAsync(property);
             return Ok("Has been added");
         }
@@ -85,7 +78,8 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetProperty")]
         public async Task<ActionResult> GetProperty(int id)
         {
-            var result = await propertyRepository.GetAsync(id);
+            var property = await peopleContext.Set<Property>().Include(x => x.Client).FirstAsync(x=> x.Id == id);        
+            var result = mapper.Map<PropertyDTO>(property);         
             if (result == null)
             {
                 return NotFound();
@@ -96,7 +90,8 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetAllProperty")]
         public ActionResult GetAllProperty()
         {
-            var result = propertyRepository.GetAll();
+            var clientName = peopleContext.Set<Property>().Include(x => x.Client).ToList();
+            var result = mapper.Map<IList<PropertyDTO>>(clientName);                   
             return Ok(result);
         }
         [HttpGet]
@@ -105,6 +100,19 @@ namespace WebApiCoreTraining.Controllers
         {
             await propertyRepository.RemoveAsync(id);
             return Ok("Has been deleted");
+        }
+        [HttpGet]
+        [Route("GetPropertyByClientId")]
+        public ActionResult GetPropertyByClientId(int id)
+        {        
+
+            var property =  peopleContext.Set<Property>().Include(x => x.Client).Where(x => x.ClientId == id);
+            var result = mapper.Map<IList<PropertyDTO>>(property);       
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 

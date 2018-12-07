@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebApiCoreTraining.Models;
+using AutoMapper;
 
 
 
@@ -36,8 +37,7 @@ namespace WebApiCoreTraining
             services.AddScoped<IRepository<Client>,Repository<Client>>();
             services.AddScoped<IRepository<Property>, Repository<Property>>();
 
-
-
+            services.AddAutoMapper();
             services.AddRouting();
             services.AddMvc();
 

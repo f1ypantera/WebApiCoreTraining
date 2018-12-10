@@ -32,7 +32,7 @@ namespace WebApiCoreTraining.Models
         {
             
             await dbSet.AddAsync(entity);
-            await peopleContext.SaveChangesAsync();
+            await peopleContext.SaveChangesAsync() ;
         }
         public async Task RemoveAsync(int id)
         {

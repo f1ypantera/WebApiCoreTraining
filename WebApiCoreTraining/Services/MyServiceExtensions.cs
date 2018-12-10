@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace WebApiCoreTraining.Services
 {
-    public class ServicesFunction
-    {
-
+    public class MyServiceExtensions
+    {      
+        public DateTime CurrentDateTime()
+        {
+            return DateTime.Now;
+        }
     }
 }

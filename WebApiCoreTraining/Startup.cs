@@ -12,7 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebApiCoreTraining.Models;
+using WebApiCoreTraining.Services;
 using AutoMapper;
+
 
 
 
@@ -37,6 +39,8 @@ namespace WebApiCoreTraining
             services.AddScoped<IRepository<Client>,Repository<Client>>();
             services.AddScoped<IRepository<Property>, Repository<Property>>();
 
+            services.AddTransient<MyServiceExtensions>();
+
             services.AddAutoMapper();
             services.AddRouting();
             services.AddMvc();
@@ -47,12 +51,25 @@ namespace WebApiCoreTraining
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-            app.UseMvc(routes =>
+            var routeBuilder = new RouteBuilder(app);
+
+            routeBuilder.MapRoute("{api}/{controller}/{action}", async context =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}");
+                context.Response.ContentType = "text/html; charset=utf-8";
+                await context.Response.WriteAsync("двухсегментный запрос");
             });
+            routeBuilder.MapRoute("{api}/{controller}/{action}/{id}",
+                async context => {
+                    context.Response.ContentType = "text/html; charset=utf-8";
+                    await context.Response.WriteAsync("трехсегментный запрос");
+                });
+            app.UseMvc();
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller}/{action}/{id?}");
+            //});
 
             if (env.IsDevelopment())
             {

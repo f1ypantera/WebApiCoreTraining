@@ -20,23 +20,26 @@ namespace WebApiCoreTraining.Controllers
         private readonly IRepository<Property> propertyRepository;
         private readonly IMapper mapper;
         private readonly PeopleContext peopleContext;
+        private readonly MyServiceExtensions myServiceExtensions;
 
 
-        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository,IMapper mapper, PeopleContext peopleContext)
+        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository,IMapper mapper, PeopleContext peopleContext, MyServiceExtensions myServiceExtensions)
         {
             this.clientRepository = clientRepository;
             this.propertyRepository = propertyRepository;
             this.mapper = mapper;
-            this.peopleContext = peopleContext;                          
+            this.peopleContext = peopleContext;
+            this.myServiceExtensions = myServiceExtensions;
+            
         }
 
         [HttpPost]
         [Route("AddClient")]
-        public async Task<ActionResult> AddClient([FromBody] ClientDTO clientDTO)
+        public async Task<ActionResult> AddClient([FromBody] ClientDTO clientDTO )
         {
             if(ModelState.IsValid)
             {
-                clientDTO.DateTimeRegister = DateTime.Now;
+                clientDTO.DateTimeRegister = myServiceExtensions.CurrentDateTime();
                 var client = mapper.Map<Client>(clientDTO);
                 await clientRepository.AddAsync(client);
             }

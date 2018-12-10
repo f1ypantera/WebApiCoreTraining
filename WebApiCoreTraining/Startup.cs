@@ -38,8 +38,9 @@ namespace WebApiCoreTraining
 
             services.AddScoped<IRepository<Client>,Repository<Client>>();
             services.AddScoped<IRepository<Property>, Repository<Property>>();
+            services.AddScoped<ClientService>();
 
-            services.AddTransient<MyServiceExtensions>();
+
 
             services.AddAutoMapper();
             services.AddRouting();

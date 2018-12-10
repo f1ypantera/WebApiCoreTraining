@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiCoreTraining.Services;
 
 
+
 namespace WebApiCoreTraining.Controllers
 {
     [Produces("application/json")]
@@ -20,16 +21,18 @@ namespace WebApiCoreTraining.Controllers
         private readonly IRepository<Property> propertyRepository;
         private readonly IMapper mapper;
         private readonly PeopleContext peopleContext;
-        private readonly MyServiceExtensions myServiceExtensions;
+        private readonly ClientService clientService;
 
 
-        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository,IMapper mapper, PeopleContext peopleContext, MyServiceExtensions myServiceExtensions)
+
+        public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository, IMapper mapper, PeopleContext peopleContext, ClientService clientService)
         {
             this.clientRepository = clientRepository;
             this.propertyRepository = propertyRepository;
             this.mapper = mapper;
             this.peopleContext = peopleContext;
-            this.myServiceExtensions = myServiceExtensions;
+            this.clientService = clientService;
+         
             
         }
 
@@ -39,9 +42,9 @@ namespace WebApiCoreTraining.Controllers
         {
             if(ModelState.IsValid)
             {
-                clientDTO.DateTimeRegister = myServiceExtensions.CurrentDateTime();
+            
                 var client = mapper.Map<Client>(clientDTO);
-                await clientRepository.AddAsync(client);
+                await clientService.AddClient(client);
             }
      
             return Ok("Has been Added");

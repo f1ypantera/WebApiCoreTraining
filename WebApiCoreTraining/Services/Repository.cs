@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiCoreTraining.Models;
-using WebApiCoreTraining.Services;
+
 
 namespace WebApiCoreTraining.Models
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using WebApiCoreTraining.Services;
+
 
 namespace WebApiCoreTraining.Models
 {

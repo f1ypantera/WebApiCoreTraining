@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApiCoreTraining.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using WebApiCoreTraining.Services;
 
 
 namespace WebApiCoreTraining.Controllers
@@ -33,15 +34,20 @@ namespace WebApiCoreTraining.Controllers
         [Route("AddClient")]
         public async Task<ActionResult> AddClient([FromBody] ClientDTO clientDTO)
         {
-            clientDTO.DateTimeRegister = DateTime.Now;
-            var client = mapper.Map<Client>(clientDTO);
-            await clientRepository.AddAsync(client);
+            if(ModelState.IsValid)
+            {
+                clientDTO.DateTimeRegister = DateTime.Now;
+                var client = mapper.Map<Client>(clientDTO);
+                await clientRepository.AddAsync(client);
+            }
+     
             return Ok("Has been Added");
         }
         [HttpGet]
         [Route("GetClient")]
         public async Task<ActionResult> GetClient(int id)
         {
+
             var client = await clientRepository.GetAsync(id);          
             var result  = mapper.Map<ClientDTO>(client);
             if (result == null)
@@ -68,10 +74,14 @@ namespace WebApiCoreTraining.Controllers
 
         [HttpPost]
         [Route("AddProperty")]
-        public async Task<ActionResult> AddProperty([FromBody] PropertyDTO propertyDTO )
+        public async Task<ActionResult> AddProperty([FromBody] PropertyAddDTO propertyAddDTO )
         {
-            var property = mapper.Map<Property>(propertyDTO);
-            await propertyRepository.AddAsync(property);
+            if (ModelState.IsValid)
+            {
+                var property = mapper.Map<Property>(propertyAddDTO);
+                await propertyRepository.AddAsync(property);
+            }
+           
             return Ok("Has been added");
         }
         [HttpGet]
@@ -79,7 +89,7 @@ namespace WebApiCoreTraining.Controllers
         public async Task<ActionResult> GetProperty(int id)
         {
             var property = await peopleContext.Set<Property>().Include(x => x.Client).FirstAsync(x=> x.Id == id);        
-            var result = mapper.Map<PropertyDTO>(property);         
+            var result = mapper.Map<PropertyDetailedDTO>(property);         
             if (result == null)
             {
                 return NotFound();
@@ -91,7 +101,7 @@ namespace WebApiCoreTraining.Controllers
         public ActionResult GetAllProperty()
         {
             var clientName = peopleContext.Set<Property>().Include(x => x.Client).ToList();
-            var result = mapper.Map<IList<PropertyDTO>>(clientName);                   
+            var result = mapper.Map<IList<PropertyDetailedDTO>>(clientName);                   
             return Ok(result);
         }
         [HttpGet]
@@ -107,7 +117,7 @@ namespace WebApiCoreTraining.Controllers
         {        
 
             var property =  peopleContext.Set<Property>().Include(x => x.Client).Where(x => x.ClientId == id);
-            var result = mapper.Map<IList<PropertyDTO>>(property);       
+            var result = mapper.Map<IList<PropertyDetailedDTO>>(property);       
             if (result == null)
             {
                 return NotFound();

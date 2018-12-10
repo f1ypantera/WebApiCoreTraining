@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using WebApiCoreTraining.Services;
 
 namespace WebApiCoreTraining.Models
 {
@@ -12,10 +13,15 @@ namespace WebApiCoreTraining.Models
         public DomainProfile()
         {
             CreateMap<Client, ClientDTO>().ReverseMap();
-            CreateMap<Property, PropertyDTO>()
+            CreateMap<Property, PropertyDetailedDTO>()
                 .ForMember(dest => dest.ClientName, opt => opt.MapFrom(x => x.Client.Name));
-           //CreateMap<PropertyDTO, Property>()
-           //    .ForAllMembers(opt => opt.Condition(src => src != null));
+
+
+            CreateMap<Property, PropertyAddDTO>().ReverseMap();
+
+
+            CreateMap<PropertyDetailedDTO, Property>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

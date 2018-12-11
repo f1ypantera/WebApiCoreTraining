@@ -64,7 +64,8 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetAllClient")]
         public ActionResult GetAllClient()
         {        
-            var result = mapper.Map<IList<ClientDTO>>(clientRepository.GetAll());        
+            var result = mapper.Map<IList<ClientDTO>>(clientService.GetAllClient());  
+            
             return Ok(result);
         }
         [HttpGet]

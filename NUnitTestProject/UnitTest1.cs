@@ -13,51 +13,58 @@ namespace Tests
 {
     public class Tests
     {
+
+      
+        [SetUp]
+        public void Setup()
+        {
+           
+
+
+        }
+
         [Test]
+        //[TestSource]
+        //[TestCaseSource]
         public async Task Can_Add_Client()
         {
-            // arrange
-            var client = new Client { Name = "Test" };
+            //arrange
             var mock = new Mock<IRepository<Client>>();
-            
             var clientService = new ClientService(mock.Object);
 
+            var client = new Client { Name = "Test" };
+                      
             // act
             await clientService.AddClient(client);
 
             // assert
-            mock.Verify(c => c.AddAsync(It.IsAny<Client>()), Times.Once());
-            Assert.AreEqual("Test",client.Name);
-            Assert.IsTrue(client.DateTimeRegister != default(DateTime));
-        }
-       
-        [SetUp]
-        public void Setup()
-        {
-
-           //var mock = new Mock<IRepository<Client>>();
-           // var mock2 = new Mock<IRepository<Property>>();
-           // var mock3 = new Mock<IMapper>();
-           // var mock4 = new Mock<PeopleContext>();
-           // var mock5 = new Mock<ClientService>();
-           // mock.Setup(repo => repo.GetAll()).Returns(AddClientTest);
-           
-
-           // var controller = new ClientController(mock.Object, mock2.Object, mock3.Object, mock4.Object, mock5.Object);
-
-            
-
+            // mock.Verify(c => c.AddAsync(It.IsAny<Client>()), Times.Once());
+            mock.Verify(c => c.AddAsync(It.Is<Client>(s=>s.Name == "Test")),Times.Once());
+           // Assert.AreEqual("Test", client.Name);
+           // Assert.IsTrue(client.DateTimeRegister != default(DateTime));
         }
 
         [Test]
-        public void Test()
+        public void Can_Get_AllClient()
         {
+            //arrange
+            var mock = new Mock<IRepository<Client>>();
+            var client = new List<Client> {
+                new Client { Name = "Test" },
+                new Client { Name = "Test2" },
+            };
+            var clientService = new ClientService(mock.Object);
 
-           
+            
 
+            //act
+            clientService.GetAllClient();
 
-            Assert.Pass();
+            // assert
+            mock.Verify(c => c.GetAll());
+            Assert.IsNotEmpty(client);
           
         }
+               
     }
 }

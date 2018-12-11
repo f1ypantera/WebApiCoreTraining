@@ -23,8 +23,6 @@ namespace WebApiCoreTraining.Controllers
         private readonly PeopleContext peopleContext;
         private readonly ClientService clientService;
 
-
-
         public ClientController(IRepository<Client> clientRepository, IRepository<Property> propertyRepository, IMapper mapper, PeopleContext peopleContext, ClientService clientService)
         {
             this.clientRepository = clientRepository;

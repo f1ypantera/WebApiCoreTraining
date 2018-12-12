@@ -13,7 +13,6 @@ namespace WebApiCoreTraining.Models
         public PeopleContext(DbContextOptions<PeopleContext> options)
             : base(options)
         { }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Property>()

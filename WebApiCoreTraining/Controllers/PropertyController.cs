@@ -9,7 +9,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WebApiCoreTraining.Services;
 
-
 namespace WebApiCoreTraining.Controllers
 {
     [Route("api/[controller]")]
@@ -36,7 +35,6 @@ namespace WebApiCoreTraining.Controllers
                 var property = mapper.Map<Property>(propertyAddDTO);
                 await propertyRepository.AddAsync(property);
             }
-
             return Ok("Has been added");
         }
         [HttpGet]
@@ -70,7 +68,6 @@ namespace WebApiCoreTraining.Controllers
         [Route("GetPropertyByClientId")]
         public ActionResult GetPropertyByClientId(int id)
         {
-
             var property = peopleContext.Set<Property>().Include(x => x.Client).Where(x => x.ClientId == id);
             var result = mapper.Map<IList<PropertyDetailedDTO>>(property);
             if (result == null)

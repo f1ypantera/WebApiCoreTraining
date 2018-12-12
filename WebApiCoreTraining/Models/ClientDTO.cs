@@ -7,11 +7,8 @@ namespace WebApiCoreTraining.Models
 {
     public class ClientDTO
     {
-
         public int ClientId { get; set; }
         public string Name { get; set; }
-        public DateTime DateTimeRegister { get; set; }
-
-      
+        public DateTime DateTimeRegister { get; set; }      
     }
 }

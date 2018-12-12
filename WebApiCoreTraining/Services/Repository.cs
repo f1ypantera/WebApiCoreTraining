@@ -6,14 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiCoreTraining.Models;
 
-
 namespace WebApiCoreTraining.Models
 {
     public class Repository<T>: IRepository<T> where T:class
     {
         private readonly DbSet<T> dbSet;
         private readonly PeopleContext peopleContext;
-
         public Repository(PeopleContext peopleContext)
         {
             dbSet = peopleContext.Set<T>();
@@ -29,8 +27,7 @@ namespace WebApiCoreTraining.Models
             return dbSet;
         }
         public async Task AddAsync(T entity)
-        {
-            
+        {           
             await dbSet.AddAsync(entity);
             await peopleContext.SaveChangesAsync() ;
         }

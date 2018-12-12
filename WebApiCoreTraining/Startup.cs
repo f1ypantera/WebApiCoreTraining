@@ -15,10 +15,6 @@ using WebApiCoreTraining.Models;
 using WebApiCoreTraining.Services;
 using AutoMapper;
 
-
-
-
-
 namespace WebApiCoreTraining
 {
     public class Startup
@@ -27,33 +23,22 @@ namespace WebApiCoreTraining
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             string con = "Data Source=KBP1-LHP-F76802\\SQLEXPRESS;Initial Catalog=usersdbstore;Trusted_Connection=True;MultipleActiveResultSets=true";
             services.AddDbContext<PeopleContext>(options => options.UseSqlServer(con));
-
             services.AddScoped<IRepository<Client>,Repository<Client>>();
             services.AddScoped<IRepository<Property>, Repository<Property>>();
             services.AddScoped<ClientService>();
-
-
-
             services.AddAutoMapper();
             services.AddRouting();
             services.AddMvc();
 
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        }       
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             var routeBuilder = new RouteBuilder(app);
-
             routeBuilder.MapRoute("{api}/{controller}/{action}", async context =>
             {
                 context.Response.ContentType = "text/html; charset=utf-8";
@@ -64,20 +49,11 @@ namespace WebApiCoreTraining
                     context.Response.ContentType = "text/html; charset=utf-8";
                     await context.Response.WriteAsync("трехсегментный запрос");
                 });
-            app.UseMvc();
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller}/{action}/{id?}");
-            //});
-
+            app.UseMvc();           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-
-          
+            }          
         }
         private async Task Handle(HttpContext context)
         {

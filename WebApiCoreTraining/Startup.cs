@@ -14,6 +14,13 @@ using Microsoft.Extensions.Options;
 using WebApiCoreTraining.Models;
 using WebApiCoreTraining.Services;
 using AutoMapper;
+using NJsonSchema;
+using NSwag.AspNetCore;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+
+
+
 
 namespace WebApiCoreTraining
 {
@@ -32,13 +39,27 @@ namespace WebApiCoreTraining
             services.AddScoped<IRepository<Property>, Repository<Property>>();
             services.AddScoped<ClientService>();
             services.AddAutoMapper();
+            services.AddSwagger();
+
+        
+
             services.AddRouting();
             services.AddMvc();
-
+            
+          
         }       
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var routeBuilder = new RouteBuilder(app);
+
+
+            app.UseSwaggerUi3WithApiExplorer(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+            });
+
+
             routeBuilder.MapRoute("{api}/{controller}/{action}", async context =>
             {
                 context.Response.ContentType = "text/html; charset=utf-8";

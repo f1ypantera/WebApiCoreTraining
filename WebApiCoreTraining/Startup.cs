@@ -39,10 +39,7 @@ namespace WebApiCoreTraining
             services.AddScoped<IRepository<Property>, Repository<Property>>();
             services.AddScoped<ClientService>();
             services.AddAutoMapper();
-            services.AddSwagger();
-
-        
-
+            services.AddSwagger();      
             services.AddRouting();
             services.AddMvc();
             
@@ -51,15 +48,11 @@ namespace WebApiCoreTraining
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var routeBuilder = new RouteBuilder(app);
-
-
             app.UseSwaggerUi3WithApiExplorer(settings =>
             {
                 settings.GeneratorSettings.DefaultPropertyNameHandling =
                     PropertyNameHandling.CamelCase;
             });
-
-
             routeBuilder.MapRoute("{api}/{controller}/{action}", async context =>
             {
                 context.Response.ContentType = "text/html; charset=utf-8";

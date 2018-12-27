@@ -15,9 +15,9 @@ using WebApiCoreTraining.Models;
 using WebApiCoreTraining.Services;
 using AutoMapper;
 using NJsonSchema;
-using NSwag.AspNetCore;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Swagger;
 
 
 
@@ -39,20 +39,32 @@ namespace WebApiCoreTraining
             services.AddScoped<IRepository<Property>, Repository<Property>>();
             services.AddScoped<ClientService>();
             services.AddAutoMapper();
-            services.AddSwagger();      
+               
             services.AddRouting();
             services.AddMvc();
-            
-          
+            services.AddSwaggerGen(swaggerGenOptions =>
+            {
+                swaggerGenOptions.SwaggerDoc("v1", new Info());
+
+                //var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Swashbuckle.xml");
+                //swaggerGenOptions.IncludeXmlComments(filePath);
+            });
+
+
+
         }       
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var routeBuilder = new RouteBuilder(app);
-            app.UseSwaggerUi3WithApiExplorer(settings =>
-            {
-                settings.GeneratorSettings.DefaultPropertyNameHandling =
-                    PropertyNameHandling.CamelCase;
-            });
+
+            app.UseSwagger().UseSwaggerUI(
+              swaggerUiOptions =>
+              {
+                  swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "My API");
+              }
+          );
+
+
             routeBuilder.MapRoute("{api}/{controller}/{action}", async context =>
             {
                 context.Response.ContentType = "text/html; charset=utf-8";
